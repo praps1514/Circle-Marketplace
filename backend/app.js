@@ -20,4 +20,13 @@ app.get(["/", "/api"], (req, res) => {
   });
 });
 
+app.all("*", (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Vercel Debug 404: The route ${req.method} ${req.url} was not found in Express.`,
+    originalUrl: req.originalUrl,
+    path: req.path
+  });
+});
+
 module.exports = app;
