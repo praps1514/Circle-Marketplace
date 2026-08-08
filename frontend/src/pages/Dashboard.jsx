@@ -24,7 +24,7 @@ import {
   Loader2,
   RefreshCw
 } from "lucide-react";
-import { getProducts } from "../services/productService";
+import { getProducts, deleteProduct } from "../services/productService";
 
 const FALLBACK_SELLER_LISTINGS = [
   {
@@ -86,8 +86,22 @@ export default function Dashboard({ onNavigateCreate, onOpenDetails }) {
   // Fetch real products from GET /api/products
   const fetchListings = async () => {
     setApiError("");
+    setIsLoading(true);
     try {
-      const response = await getProducts();
+      let sellerEmail = "anonymous@circle.com";
+      try {
+        const storedUser = localStorage.getItem("circle_user");
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          if (user && user.email) {
+            sellerEmail = user.email;
+          }
+        }
+      } catch (e) {
+        console.error("Error parsing user from localStorage:", e);
+      }
+
+      const response = await getProducts({ sellerEmail });
       const apiData = response.data?.data || response.data || [];
       if (Array.isArray(apiData) && apiData.length > 0) {
         const formatted = apiData.map((item) => ({
@@ -104,11 +118,12 @@ export default function Dashboard({ onNavigateCreate, onOpenDetails }) {
         }));
         setListings(formatted);
       } else {
-        setListings(FALLBACK_SELLER_LISTINGS);
+        setListings([]);
       }
     } catch (err) {
-      console.warn("Using fallback seller listings:", err);
+      console.warn("Using fallback seller listings due to error:", err);
       setListings(FALLBACK_SELLER_LISTINGS);
+      setApiError("Failed to fetch your live listings.");
     } finally {
       setIsLoading(false);
     }
@@ -123,9 +138,21 @@ export default function Dashboard({ onNavigateCreate, onOpenDetails }) {
   });
 
   // Action Handlers
-  const handleDelete = (id) => {
-    setListings(listings.filter((item) => item.id !== id));
-    setDeleteId(null);
+  const handleDelete = async (id) => {
+    try {
+      // First call the backend API to actually delete the document from MongoDB
+      const res = await deleteProduct(id);
+      if (res.data && res.data.success) {
+        // Only remove from local state if backend delete succeeds
+        setListings(listings.filter((item) => item.id !== id));
+        setDeleteId(null);
+      } else {
+        setApiError("Backend failed to delete the product.");
+      }
+    } catch (err) {
+      console.error("Delete failed:", err);
+      setApiError("Failed to communicate with server to delete product.");
+    }
   };
 
   const handleSaveEdit = (e) => {

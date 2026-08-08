@@ -33,7 +33,13 @@ const productSchema = new mongoose.Schema(
             {
                 type: String
             }
-        ]
+        ],
+
+        sellerEmail: {
+            type: String,
+            required: true,
+            default: "anonymous@circle.com"
+        }
 
     },
     {

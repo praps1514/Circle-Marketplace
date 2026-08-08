@@ -24,27 +24,28 @@ const createProduct = async (req, res) => {
 
 
 
-// Get All Products
+// Get All Products (or Filtered by Seller)
 const getProducts = async (req, res) => {
     try {
+        const filter = {};
+        if (req.query.sellerEmail) {
+            filter.sellerEmail = req.query.sellerEmail;
+        }
 
-        const products = await Product.find()
-            .populate("category");
-
+        const products = await Product.find(filter)
+            .populate("category")
+            .sort({ createdAt: -1 });
 
         res.json({
             success: true,
             data: products
         });
 
-
     } catch (error) {
-
         res.status(500).json({
             success: false,
             message: error.message
         });
-
     }
 };
 
@@ -79,10 +80,22 @@ const getProductsByCategory = async (req, res) => {
 
 };
 
-
+// Delete Product
+const deleteProduct = async (req, res) => {
+    try {
+        const product = await Product.findByIdAndDelete(req.params.id);
+        if (!product) {
+            return res.status(404).json({ success: false, message: "Product not found" });
+        }
+        res.json({ success: true, data: product, message: "Product deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
 
 module.exports = {
     createProduct,
     getProducts,
-    getProductsByCategory
+    getProductsByCategory,
+    deleteProduct
 };

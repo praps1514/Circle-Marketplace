@@ -6,7 +6,8 @@ const router = express.Router();
 const {
     createProduct,
     getProducts,
-    getProductsByCategory
+    getProductsByCategory,
+    deleteProduct
 } = require("../controllers/productController");
 
 
@@ -30,6 +31,10 @@ router.get(
     "/category/:id",
     getProductsByCategory
 );
-
+// Delete Product
+router.delete(
+    "/:id",
+    deleteProduct
+);
 
 module.exports = router;

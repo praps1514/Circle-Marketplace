@@ -4,7 +4,7 @@ A scalable, extensible secondhand marketplace web application built with **React
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ```text
 Circle Marketplace
@@ -129,7 +129,7 @@ npm run build    # Compiles production bundle (0 errors)
 
 ---
 
-## 🚀 Deploying to Vercel (Step-by-Step)
+##  Deploying to Vercel (Step-by-Step)
 
 The project includes pre-configured Vercel serverless rules ([vercel.json](file:///c:/Users/Prasanitha/Desktop/circle-marketplace/vercel.json) and [api/index.js](file:///c:/Users/Prasanitha/Desktop/circle-marketplace/api/index.js)) for full-stack deployment.
 

@@ -249,13 +249,25 @@ export default function CreateProduct({ onProductCreated }) {
     const finalImage = getCategoryFallbackImage(selectedCategory?.name);
 
     try {
+      let sellerEmail = "anonymous@circle.com";
+      try {
+        const storedUser = localStorage.getItem("circle_user");
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          sellerEmail = user.email || sellerEmail;
+        }
+      } catch (e) {
+        console.error("Error parsing user from localStorage:", e);
+      }
+
       const payload = {
         title: title.trim(),
         price: Number(price),
         description: description.trim(),
         category: selectedCategory._id,
         attributes: attributes,
-        images: images.length > 0 ? images : [finalImage]
+        images: images.length > 0 ? images : [finalImage],
+        sellerEmail: sellerEmail
       };
 
       const response = await createProduct(payload);
