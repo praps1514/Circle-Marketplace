@@ -36,22 +36,59 @@ const getCategoryIconAndColor = (name) => {
   return { icon: Layers, color: "bg-slate-50 text-slate-600 border-slate-200" };
 };
 
+const FALLBACK_CATEGORIES = [
+  {
+    _id: "c1",
+    name: "Mobile Phones",
+    fields: [1, 2, 3]
+  },
+  {
+    _id: "c2",
+    name: "Laptops",
+    fields: [1, 2, 3, 4, 5]
+  },
+  {
+    _id: "c3",
+    name: "Vehicles",
+    fields: [1, 2, 3, 4, 5]
+  },
+  {
+    _id: "c4",
+    name: "Fashion",
+    fields: [1, 2, 3, 4]
+  },
+  {
+    _id: "c5",
+    name: "Home & Furniture",
+    fields: [1, 2, 3, 4]
+  },
+  {
+    _id: "c6",
+    name: "Electronics",
+    fields: [1, 2, 3, 4]
+  }
+];
+
 export default function FeaturedCategories({ onSelectCategory, onBrowseAll }) {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState(FALLBACK_CATEGORIES);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const fetchCategories = async () => {
-    setLoading(true);
     try {
       const res = await getCategories();
       const catList = res.data?.data || res.data || [];
-      setCategories(catList);
+      if (Array.isArray(catList) && catList.length > 0) {
+        setCategories(catList);
+      } else {
+        setCategories(FALLBACK_CATEGORIES);
+      }
     } catch (err) {
-      console.error("Failed to fetch featured categories:", err);
+      console.warn("Failed to fetch featured categories:", err);
+      setCategories(FALLBACK_CATEGORIES);
     } finally {
       setLoading(false);
     }
