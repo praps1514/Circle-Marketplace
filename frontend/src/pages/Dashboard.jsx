@@ -24,6 +24,7 @@ import {
   Loader2,
   RefreshCw
 } from "lucide-react";
+import { getProducts } from "../services/productService";
 
 const FALLBACK_SELLER_LISTINGS = [
   {
