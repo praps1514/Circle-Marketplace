@@ -12,7 +12,7 @@ const FALLBACK_PRODUCTS = [
     _id: "p1",
     title: "Apple MacBook Pro 16'' M3 Max (36GB RAM, 1TB SSD) - Space Black",
     price: 189999,
-    category: { name: "Electronics" },
+    category: { name: "Laptops" },
     location: "Mumbai, MH",
     postedTime: "10 mins ago",
     images: ["https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80"],
@@ -26,7 +26,7 @@ const FALLBACK_PRODUCTS = [
     category: { name: "Vehicles" },
     location: "Bengaluru, KA",
     postedTime: "35 mins ago",
-    images: ["https://images.unsplash.com/photo-1560343090-f0409e92791a?w=800&auto=format&fit=crop&q=80"],
+    images: ["https://images.unsplash.com/photo-1536700503339-1e4b06520771?w=800&auto=format&fit=crop&q=80"],
     verifiedSeller: true,
     badge: "Hot Price"
   },
@@ -42,13 +42,34 @@ const FALLBACK_PRODUCTS = [
   },
   {
     _id: "p4",
+    title: "Apple iPhone 15 Pro Max (256GB, Natural Titanium) - Unlocked",
+    price: 119999,
+    category: { name: "Mobile Phones" },
+    location: "Hyderabad, TS",
+    postedTime: "2 hours ago",
+    images: ["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&auto=format&fit=crop&q=80"],
+    verifiedSeller: true,
+    badge: "Featured"
+  },
+  {
+    _id: "p5",
     title: "Sony PlayStation 5 Slim Digital Edition + 2 DualSense Controllers",
     price: 39999,
     category: { name: "Electronics" },
-    location: "Hyderabad, TS",
-    postedTime: "2 hours ago",
+    location: "Chennai, TN",
+    postedTime: "3 hours ago",
     images: ["https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800&auto=format&fit=crop&q=80"],
     verifiedSeller: true
+  },
+  {
+    _id: "p6",
+    title: "Premium Designer Denim Jacket & Apparel Collection",
+    price: 4999,
+    category: { name: "Fashion" },
+    location: "Kolkata, WB",
+    postedTime: "4 hours ago",
+    images: ["https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&auto=format&fit=crop&q=80"],
+    verifiedSeller: false
   }
 ];
 

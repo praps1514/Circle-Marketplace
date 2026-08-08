@@ -165,6 +165,26 @@ export default function CreateProduct({ onProductCreated }) {
 
     setIsSubmitting(true);
 
+    const getCategoryFallbackImage = (catName = "") => {
+      const cat = String(catName).toLowerCase();
+      if (cat.includes("mobile") || cat.includes("phone")) {
+        return "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&auto=format&fit=crop&q=80";
+      } else if (cat.includes("laptop") || cat.includes("computer")) {
+        return "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80";
+      } else if (cat.includes("vehicle") || cat.includes("car") || cat.includes("auto")) {
+        return "https://images.unsplash.com/photo-1536700503339-1e4b06520771?w=800&auto=format&fit=crop&q=80";
+      } else if (cat.includes("fashion") || cat.includes("cloth") || cat.includes("wear")) {
+        return "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&auto=format&fit=crop&q=80";
+      } else if (cat.includes("furniture") || cat.includes("home") || cat.includes("sofa")) {
+        return "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&auto=format&fit=crop&q=80";
+      } else if (cat.includes("electronic") || cat.includes("tech")) {
+        return "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800&auto=format&fit=crop&q=80";
+      }
+      return "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&auto=format&fit=crop&q=80";
+    };
+
+    const finalImage = getCategoryFallbackImage(selectedCategory?.name);
+
     try {
       const payload = {
         title: title.trim(),
@@ -172,7 +192,7 @@ export default function CreateProduct({ onProductCreated }) {
         description: description.trim(),
         category: selectedCategory._id,
         attributes: attributes,
-        images: images.length > 0 ? images : ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80"]
+        images: images.length > 0 ? images : [finalImage]
       };
 
       const response = await createProduct(payload);
@@ -186,7 +206,7 @@ export default function CreateProduct({ onProductCreated }) {
           description: description.trim(),
           category: selectedCategory,
           attributes: attributes,
-          images: images.length > 0 ? images : ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80"]
+          images: images.length > 0 ? images : [finalImage]
         };
         setSuccessMessage("🎉 Product successfully created and published!");
         

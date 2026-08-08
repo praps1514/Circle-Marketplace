@@ -4,32 +4,20 @@ const cors = require("cors");
 const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
 
-
 const app = express();
-
 
 app.use(cors());
 app.use(express.json());
 
+// Support both /api/categories and /categories for local & Vercel serverless functions
+app.use(["/api/categories", "/categories"], categoryRoutes);
+app.use(["/api/products", "/products"], productRoutes);
 
-app.use(
-  "/api/categories",
-  categoryRoutes
-);
-
-
-app.use(
-  "/api/products",
-  productRoutes
-);
-
-
-app.get("/", (req, res) => {
+app.get(["/", "/api"], (req, res) => {
   res.json({
     success: true,
     message: "Circle Marketplace API is running 🚀",
   });
 });
-
 
 module.exports = app;
