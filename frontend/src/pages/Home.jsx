@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import HeroBanner from "../components/HeroBanner";
 import FeaturedCategories from "../components/FeaturedCategories";
 import ProductCard from "../components/ProductCard";
-import Footer from "../components/Footer";
 import { getProducts } from "../services/productService";
 import { Sparkles, Flame, Clock, ArrowRight, Loader2, Package } from "lucide-react";
 
@@ -244,9 +243,6 @@ export default function Home({ onNavigateCreate, onOpenDetails, onNavigateCatego
           })}
         </div>
       </section>
-
-      {/* 6. Footer */}
-      <Footer />
 
     </div>
   );

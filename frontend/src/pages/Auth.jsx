@@ -148,31 +148,6 @@ export default function Auth({ initialMode = "login", onLoginSuccess, onBackHome
           </p>
         </div>
 
-        {/* Quick Demo Access Bar */}
-        <div className="p-3 bg-slate-950/80 border border-slate-800 rounded-2xl space-y-2">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block text-center tracking-wider">
-            ⚡ Quick Demo Accounts
-          </span>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => handleQuickDemoLogin("seller")}
-              className="px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 border border-blue-500/30 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95"
-            >
-              <ShoppingBag className="w-3.5 h-3.5" />
-              <span>Demo Seller</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickDemoLogin("admin")}
-              className="px-3 py-1.5 bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95"
-            >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Demo Admin</span>
-            </button>
-          </div>
-        </div>
-
         {/* Tab Toggle: Sign In vs Create Account */}
         <div className="p-1 bg-slate-950/60 rounded-2xl border border-white/5 grid grid-cols-2 gap-1 text-xs font-bold">
           <button

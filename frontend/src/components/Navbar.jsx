@@ -270,30 +270,18 @@ export default function Navbar({ activeNav, setActiveNav, currentUser, onLogout 
             )}
           </div>
 
-          {/* Account Actions & Logout Button */}
-          <div className="pt-3 border-t border-slate-100 space-y-2">
-            
-            <button
-              onClick={() => handleNavClick("auth")}
-              className="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition"
-            >
-              <div className="flex items-center gap-2.5">
-                <RefreshCw className="w-4 h-4 text-blue-600" />
-                <span>Switch Account / Sign In</span>
-              </div>
-            </button>
-
+          {/* Logout Action */}
+          <div className="pt-3 border-t border-slate-100">
             {/* LOG OUT BUTTON */}
             <button
               onClick={handleLogoutClick}
-              className="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 transition border border-rose-100"
+              className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 transition border border-rose-100 shadow-sm"
             >
               <div className="flex items-center gap-2.5">
                 <LogOut className="w-4 h-4" />
                 <span>Log Out ({user.role.toUpperCase()})</span>
               </div>
             </button>
-
           </div>
 
         </div>
