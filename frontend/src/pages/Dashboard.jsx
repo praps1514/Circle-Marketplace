@@ -26,47 +26,8 @@ import {
 } from "lucide-react";
 import { getProducts, deleteProduct } from "../services/productService";
 
-const FALLBACK_SELLER_LISTINGS = [
-  {
-    id: "m1",
-    title: "Apple MacBook Pro 16'' M3 Max (36GB RAM, 1TB SSD) - Space Black",
-    price: 189999,
-    category: "Laptops",
-    status: "Active",
-    views: 284,
-    likes: 38,
-    date: "Today",
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&auto=format&fit=crop&q=80",
-    attributes: { "Brand": "Apple", "RAM": "36GB", "Storage": "1TB SSD" }
-  },
-  {
-    id: "m2",
-    title: "Apple iPhone 15 Pro Max (256GB, Natural Titanium)",
-    price: 119999,
-    category: "Mobile Phones",
-    status: "Active",
-    views: 192,
-    likes: 24,
-    date: "Yesterday",
-    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&auto=format&fit=crop&q=80",
-    attributes: { "Brand": "Apple", "Storage": "256GB", "Condition": "Like New" }
-  },
-  {
-    id: "m3",
-    title: "Sony PlayStation 5 Slim Digital Edition + 2 DualSense Controllers",
-    price: 39999,
-    category: "Electronics",
-    status: "Active",
-    views: 145,
-    likes: 19,
-    date: "3 days ago",
-    image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=400&auto=format&fit=crop&q=80",
-    attributes: { "Brand": "Sony", "Warranty": "1 Year" }
-  }
-];
-
 export default function Dashboard({ onNavigateCreate, onOpenDetails }) {
-  const [listings, setListings] = useState(FALLBACK_SELLER_LISTINGS);
+  const [listings, setListings] = useState([]);
   const [activeTab, setActiveTab] = useState("listings");
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -103,7 +64,7 @@ export default function Dashboard({ onNavigateCreate, onOpenDetails }) {
 
       const response = await getProducts({ sellerEmail });
       const apiData = response.data?.data || response.data || [];
-      if (Array.isArray(apiData) && apiData.length > 0) {
+      if (Array.isArray(apiData)) {
         const formatted = apiData.map((item) => ({
           ...item,
           id: item._id || item.id,
@@ -122,7 +83,7 @@ export default function Dashboard({ onNavigateCreate, onOpenDetails }) {
       }
     } catch (err) {
       console.warn("Using fallback seller listings due to error:", err);
-      setListings(FALLBACK_SELLER_LISTINGS);
+      setListings([]);
       setApiError("Failed to fetch your live listings.");
     } finally {
       setIsLoading(false);
