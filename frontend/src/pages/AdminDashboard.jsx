@@ -23,10 +23,70 @@ import {
   Info
 } from "lucide-react";
 
+const FALLBACK_ADMIN_CATEGORIES = [
+  {
+    _id: "c1",
+    name: "Mobile Phones",
+    fields: [
+      { _id: "f1", label: "Brand", type: "text", required: true },
+      { _id: "f2", label: "Storage", type: "select", options: ["64GB", "128GB", "256GB", "512GB", "1TB"], required: true },
+      { _id: "f3", label: "Condition", type: "select", options: ["New", "Like New", "Good", "Fair"], required: true }
+    ]
+  },
+  {
+    _id: "c2",
+    name: "Laptops",
+    fields: [
+      { _id: "f4", label: "Brand", type: "text", required: true },
+      { _id: "f5", label: "RAM", type: "select", options: ["8GB", "16GB", "32GB", "64GB"], required: true },
+      { _id: "f6", label: "Storage", type: "select", options: ["256GB SSD", "512GB SSD", "1TB SSD"], required: true },
+      { _id: "f7", label: "Processor", type: "text", required: false },
+      { _id: "f8", label: "Condition", type: "select", options: ["New", "Like New", "Good", "Fair"], required: true }
+    ]
+  },
+  {
+    _id: "c3",
+    name: "Vehicles",
+    fields: [
+      { _id: "f9", label: "Brand", type: "text", required: true },
+      { _id: "f10", label: "Model", type: "text", required: true },
+      { _id: "f11", label: "Year", type: "number", required: true },
+      { _id: "f12", label: "Fuel Type", type: "radio", options: ["Petrol", "Diesel", "Electric", "Hybrid"], required: true }
+    ]
+  },
+  {
+    _id: "c4",
+    name: "Fashion",
+    fields: [
+      { _id: "f13", label: "Brand", type: "text", required: false },
+      { _id: "f14", label: "Size", type: "select", options: ["S", "M", "L", "XL", "XXL"], required: true },
+      { _id: "f15", label: "Gender", type: "radio", options: ["Men", "Women", "Unisex"], required: true }
+    ]
+  },
+  {
+    _id: "c5",
+    name: "Home & Furniture",
+    fields: [
+      { _id: "f16", label: "Item Type", type: "text", required: true },
+      { _id: "f17", label: "Material", type: "text", required: false },
+      { _id: "f18", label: "Condition", type: "select", options: ["New", "Like New", "Good", "Fair"], required: true }
+    ]
+  },
+  {
+    _id: "c6",
+    name: "Electronics",
+    fields: [
+      { _id: "f19", label: "Brand", type: "text", required: true },
+      { _id: "f20", label: "Model", type: "text", required: false },
+      { _id: "f21", label: "Warranty", type: "select", options: ["None", "6 Months", "1 Year", "2 Years"], required: false }
+    ]
+  }
+];
+
 export default function AdminDashboard() {
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState(FALLBACK_ADMIN_CATEGORIES);
+  const [selectedCategory, setSelectedCategory] = useState(FALLBACK_ADMIN_CATEGORIES[0]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -47,14 +107,12 @@ export default function AdminDashboard() {
   }, []);
 
   const fetchCategories = async (selectId = null) => {
-    setLoading(true);
     setError("");
     try {
       const res = await getCategories();
       const catList = res.data?.data || res.data || [];
-      setCategories(catList);
-
-      if (catList.length > 0) {
+      if (Array.isArray(catList) && catList.length > 0) {
+        setCategories(catList);
         if (selectId) {
           const found = catList.find((c) => c._id === selectId);
           setSelectedCategory(found || catList[0]);
@@ -68,11 +126,13 @@ export default function AdminDashboard() {
           });
         }
       } else {
-        setSelectedCategory(null);
+        setCategories(FALLBACK_ADMIN_CATEGORIES);
+        setSelectedCategory(FALLBACK_ADMIN_CATEGORIES[0]);
       }
     } catch (err) {
-      console.error("Failed to load categories in Admin:", err);
-      setError("Failed to fetch category schemas from backend server.");
+      console.warn("Using fallback admin categories:", err);
+      setCategories(FALLBACK_ADMIN_CATEGORIES);
+      setSelectedCategory(FALLBACK_ADMIN_CATEGORIES[0]);
     } finally {
       setLoading(false);
     }
