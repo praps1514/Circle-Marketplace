@@ -49,3 +49,21 @@ body {
 .input-field::placeholder {
   color: #94a3b8;
 }
+
+/* Glassmorphism Dark Inputs for Auth Page */
+.glass-input {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.glass-input:focus {
+  outline: none !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important;
+}
+
+.glass-input::placeholder {
+  color: #94a3b8 !important;
+}
