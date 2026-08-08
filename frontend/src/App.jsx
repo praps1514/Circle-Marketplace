@@ -13,7 +13,7 @@ function App() {
   const [activeNav, setActiveNav] = useState("home");
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Global currentUser state loaded from localStorage
+  // Global currentUser state initialized from localStorage
   const [currentUser, setCurrentUser] = useState(() => {
     try {
       const stored = localStorage.getItem("circle_user");
@@ -23,14 +23,15 @@ function App() {
     } catch (e) {
       console.error("Error reading stored user:", e);
     }
-    // Default fallback: Seller
-    return { name: "Sarah Jenkins", email: "seller@circle.com", role: "seller" };
+    return null;
   });
 
-  // Sync currentUser with localStorage whenever changed
+  // Sync currentUser with localStorage
   useEffect(() => {
     if (currentUser) {
       localStorage.setItem("circle_user", JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem("circle_user");
     }
   }, [currentUser]);
 
@@ -50,10 +51,9 @@ function App() {
   };
 
   const handleLogout = () => {
-    const defaultUser = { name: "Guest User", email: "", role: "seller" };
-    setCurrentUser(defaultUser);
+    setCurrentUser(null);
     localStorage.removeItem("circle_user");
-    setActiveNav("home");
+    setActiveNav("auth");
   };
 
   // Route Guard: Prevent non-admins from rendering AdminDashboard
