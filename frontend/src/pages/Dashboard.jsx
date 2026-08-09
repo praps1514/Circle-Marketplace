@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { 
   LayoutDashboard, 
   Package, 
-  DollarSign, 
+  DollarSign,
+  IndianRupee, 
   Eye, 
   MessageSquare, 
   PlusCircle, 
@@ -288,14 +289,14 @@ export default function Dashboard({ onNavigateCreate, onOpenDetails }) {
             <div className="space-y-1">
               <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider font-mono">Catalog Valuation</span>
               <h3 className="text-2xl font-black text-slate-900">
-                ${listings.reduce((acc, curr) => acc + (Number(curr.price) || 0), 0).toLocaleString("en-US")}
+                ₹{listings.reduce((acc, curr) => acc + (Number(curr.price) || 0), 0).toLocaleString("en-IN")}
               </h3>
               <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" /> Total Value
               </span>
             </div>
             <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
-              <DollarSign className="w-6 h-6" />
+              <IndianRupee className="w-6 h-6" />
             </div>
           </div>
 
@@ -443,7 +444,7 @@ export default function Dashboard({ onNavigateCreate, onOpenDetails }) {
 
                       {/* Price */}
                       <td className="py-4 px-4 font-black text-blue-600">
-                        ${Number(item.price).toLocaleString("en-US")}
+                        ₹{Number(item.price).toLocaleString("en-IN")}
                       </td>
 
                       {/* Category */}
@@ -547,7 +548,7 @@ export default function Dashboard({ onNavigateCreate, onOpenDetails }) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Price ($)</label>
+                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Price (₹ INR)</label>
                   <input
                     type="number"
                     value={editingItem.price}
