@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "seed": "node seedCategories.js"
+    "seed": "node seedCategories.js",
+    "clear-products": "node clearProducts.js"
   },
   "dependencies": {
     "cors": "^2.8.6",
