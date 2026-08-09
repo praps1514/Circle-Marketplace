@@ -174,7 +174,31 @@ export default function CreateProduct({ onProductCreated }) {
     }
   };
 
-  // 4. Image Management
+  // 4. Image Management & Device File Upload
+  const processFiles = (files) => {
+    const validFiles = Array.from(files).filter((file) => file.type.startsWith("image/"));
+    if (validFiles.length === 0) return;
+
+    validFiles.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          setImages((prev) => [...prev, e.target.result]);
+          if (validationErrors.images) {
+            setValidationErrors((prev) => ({ ...prev, images: null }));
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleFileSelect = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      processFiles(e.target.files);
+    }
+  };
+
   const handleAddImageUrl = () => {
     if (!imageUrlInput.trim()) return;
     setImages((prev) => [...prev, imageUrlInput.trim()]);
@@ -188,12 +212,27 @@ export default function CreateProduct({ onProductCreated }) {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
   const handleImageDrop = (e) => {
     e.preventDefault();
     setIsDragOver(false);
-    // Allow dragging image files or image URLs
-    const sampleImg = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80";
-    setImages((prev) => [...prev, sampleImg]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      processFiles(e.dataTransfer.files);
+    } else {
+      const url = e.dataTransfer.getData("text/plain");
+      if (url && url.startsWith("http")) {
+        setImages((prev) => [...prev, url]);
+      }
+    }
   };
 
   // 5. Submit Form to POST /api/products
@@ -456,7 +495,7 @@ export default function CreateProduct({ onProductCreated }) {
                       setPrice(e.target.value);
                       if (validationErrors.price) setValidationErrors({ ...validationErrors, price: null });
                     }}
-                    className={`input-field pl-9 ${validationErrors.price ? "border-rose-400 focus:ring-rose-200" : ""}`}
+                    className={`input-field input-field-icon-left ${validationErrors.price ? "border-rose-400 focus:ring-rose-200" : ""}`}
                     required
                   />
                 </div>
@@ -622,17 +661,71 @@ export default function CreateProduct({ onProductCreated }) {
 
           <hr className="border-slate-100" />
 
-          {/* Section 4: Image URLs */}
+          {/* Section 4: Product Pictures & Image Upload */}
           <div className="space-y-4">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-              <ImageIcon className="w-4 h-4 text-blue-600" />
-              <span>4. Image Gallery</span>
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+                <ImageIcon className="w-4 h-4 text-blue-600" />
+                <span>4. Product Pictures ({images.length})</span>
+              </label>
+              <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full">
+                Drag & Drop / Device Upload
+              </span>
+            </div>
 
-            <div className="flex items-center gap-2">
+            {/* Hidden File Input */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileSelect}
+              accept="image/*"
+              multiple
+              className="hidden"
+            />
+
+            {/* Interactive Drag & Drop Upload Zone */}
+            <div
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleImageDrop}
+              onClick={() => fileInputRef.current?.click()}
+              className={`p-6 sm:p-8 rounded-3xl border-2 border-dashed text-center cursor-pointer transition-all duration-200 ${
+                isDragOver
+                  ? "border-blue-600 bg-blue-50/80 scale-[1.01]"
+                  : "border-slate-300 bg-slate-50/60 hover:bg-slate-100/80 hover:border-slate-400"
+              }`}
+            >
+              <div className="max-w-md mx-auto space-y-3 pointer-events-none">
+                <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 mx-auto flex items-center justify-center shadow-sm">
+                  <UploadCloud className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-xs font-extrabold text-slate-900">
+                    Drag & drop product photos here, or <span className="text-blue-600 underline">browse device</span>
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    Upload multiple high-resolution photos (.png, .jpg, .jpeg, .webp)
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fileInputRef.current?.click();
+                  }}
+                  className="pointer-events-auto inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-md transition"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Upload Photos from Device</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Option to paste image URL */}
+            <div className="flex items-center gap-2 pt-1">
               <input
                 type="url"
-                placeholder="Paste high-res image URL (e.g. https://...)"
+                placeholder="Or paste an image web URL (e.g. https://...)"
                 value={imageUrlInput}
                 onChange={(e) => setImageUrlInput(e.target.value)}
                 className="flex-1 input-field text-xs"
@@ -640,26 +733,42 @@ export default function CreateProduct({ onProductCreated }) {
               <button
                 type="button"
                 onClick={handleAddImageUrl}
-                className="px-4 py-2.5 text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition"
+                className="px-4 py-2.5 text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition flex-shrink-0"
               >
-                + Add Image
+                + Add URL
               </button>
             </div>
 
+            {/* Uploaded Pictures Preview Gallery */}
             {images.length > 0 && (
-              <div className="flex items-center gap-3 overflow-x-auto pb-2">
-                {images.map((imgUrl, i) => (
-                  <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-slate-200 flex-shrink-0 group">
-                    <img src={imgUrl} alt={`Uploaded ${i}`} className="w-full h-full object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(i)}
-                      className="absolute inset-0 bg-rose-900/80 text-white flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
+              <div className="space-y-2 pt-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  Uploaded Gallery ({images.length} photos)
+                </span>
+                <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-3">
+                  {images.map((imgUrl, i) => (
+                    <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-slate-200 group shadow-sm bg-slate-100">
+                      <img src={imgUrl} alt={`Uploaded ${i}`} className="w-full h-full object-cover" />
+                      
+                      {/* Cover Photo Badge on 1st image */}
+                      {i === 0 && (
+                        <span className="absolute top-1 left-1 px-1.5 py-0.5 text-[9px] font-extrabold bg-blue-600 text-white rounded-md shadow">
+                          Cover
+                        </span>
+                      )}
+
+                      {/* Remove Overlay Button */}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(i)}
+                        className="absolute inset-0 bg-rose-950/70 text-white flex flex-col items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-[10px] font-bold"
+                      >
+                        <X className="w-5 h-5 text-rose-300" />
+                        <span>Remove</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>

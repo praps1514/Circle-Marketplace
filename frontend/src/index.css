@@ -50,6 +50,11 @@ body {
   color: #94a3b8;
 }
 
+/* Input fields with left-positioned icons */
+.input-field-icon-left {
+  padding-left: 2.75rem !important;
+}
+
 /* Glassmorphism Dark Inputs for Auth Page */
 .glass-input {
   background-color: rgba(15, 23, 42, 0.85) !important;
