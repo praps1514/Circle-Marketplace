@@ -2,9 +2,6 @@ const mongoose = require("mongoose");
 
 let isConnected = false;
 
-// Fallback MongoDB connection string if process.env.MONGO_URI is omitted in Vercel settings
-const FALLBACK_MONGO_URI = "mongodb+srv://prasanitharamana_db_user:Circle2026@cluster0.g8nvse7.mongodb.net/circle-marketplace?retryWrites=true&w=majority&appName=Cluster0";
-
 const connectDB = async () => {
   if (isConnected || mongoose.connection.readyState >= 1) {
     return;
@@ -21,7 +18,12 @@ const connectDB = async () => {
   }
 
   try {
-    const connUri = process.env.MONGO_URI || FALLBACK_MONGO_URI;
+    const connUri = process.env.MONGO_URI;
+
+    if (!connUri) {
+      throw new Error("MONGO_URI environment variable is not configured");
+    }
+
     const conn = await mongoose.connect(connUri, {
       bufferCommands: false,
     });
@@ -30,7 +32,6 @@ const connectDB = async () => {
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error("❌ MongoDB Connection Failed:", error.message);
-    // Do not call process.exit(1) in serverless execution environments
     throw error;
   }
 };
