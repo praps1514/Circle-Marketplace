@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 let isConnected = false;
 
 // Fallback MongoDB connection string if process.env.MONGO_URI is omitted in Vercel settings
-const FALLBACK_MONGO_URI = "mongodb+srv://prasanithak_db:MongoDB123@cluster0.g8nvse7.mongodb.net/circle_marketplace?retryWrites=true&w=majority";
+const FALLBACK_MONGO_URI = "mongodb+srv://prasanitharamana_db_user:Circle2026@cluster0.g8nvse7.mongodb.net/circle-marketplace?retryWrites=true&w=majority&appName=Cluster0";
 
 const connectDB = async () => {
   if (isConnected || mongoose.connection.readyState >= 1) {
