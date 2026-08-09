@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 function App() {
   const [activeNav, setActiveNav] = useState("home");
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   // Global currentUser state initialized from localStorage
   const [currentUser, setCurrentUser] = useState(() => {
@@ -38,6 +39,12 @@ function App() {
   const handleOpenDetails = (product) => {
     setSelectedProduct(product);
     setActiveNav("details");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleSelectCategory = (cat) => {
+    setSelectedCategory(cat);
+    setActiveNav("home");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -85,6 +92,8 @@ function App() {
             <AdminDashboard />
           ) : (
             <Home
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
               onNavigateCreate={() => setActiveNav("create")}
               onNavigateCategories={() => setActiveNav("categories")}
               onOpenDetails={handleOpenDetails}
@@ -92,6 +101,7 @@ function App() {
           )
         ) : activeNav === "categories" ? (
           <Categories
+            onSelectCategory={handleSelectCategory}
             onNavigateCreate={() => setActiveNav("create")}
           />
         ) : activeNav === "create" ? (
@@ -110,6 +120,8 @@ function App() {
           />
         ) : (
           <Home
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
             onNavigateCreate={() => setActiveNav("create")}
             onNavigateCategories={() => setActiveNav("categories")}
             onOpenDetails={handleOpenDetails}

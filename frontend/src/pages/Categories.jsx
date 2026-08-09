@@ -100,7 +100,7 @@ const FALLBACK_CATEGORIES = [
   }
 ];
 
-export default function Categories({ onNavigateCreate }) {
+export default function Categories({ onNavigateCreate, onSelectCategory }) {
   const [categories, setCategories] = useState(FALLBACK_CATEGORIES);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -138,7 +138,7 @@ export default function Categories({ onNavigateCreate }) {
               Marketplace Categories
             </h1>
             <p className="text-sm text-slate-500 mt-1">
-              Browse all active categories with their custom specification options.
+              Click any category to view its listed products or post a new item.
             </p>
           </div>
 
@@ -182,7 +182,7 @@ export default function Categories({ onNavigateCreate }) {
                   key={cat._id || cat.name}
                   className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300 p-6 flex flex-col justify-between space-y-6 group"
                 >
-                  <div className="space-y-4">
+                  <div className="space-y-4 cursor-pointer" onClick={() => onSelectCategory && onSelectCategory(cat)}>
                     {/* Header icon and title */}
                     <div className="flex items-center gap-3.5">
                       <div className={`p-3.5 rounded-2xl border ${color} group-hover:scale-110 transition-transform duration-300`}>
@@ -225,14 +225,22 @@ export default function Categories({ onNavigateCreate }) {
                     </div>
                   </div>
 
-                  {/* Action button */}
-                  <button
-                    onClick={() => onNavigateCreate && onNavigateCreate()}
-                    className="w-full py-2.5 px-4 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-600 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 group/btn"
-                  >
-                    <span>Create Product in {cat.name}</span>
-                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </button>
+                  {/* Action buttons */}
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                    <button
+                      onClick={() => onSelectCategory && onSelectCategory(cat)}
+                      className="py-2.5 px-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 group/btn"
+                    >
+                      <span>View Products</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
+                    </button>
+                    <button
+                      onClick={() => onNavigateCreate && onNavigateCreate()}
+                      className="py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1"
+                    >
+                      <span>+ Post Item</span>
+                    </button>
+                  </div>
                 </div>
               );
             })}
